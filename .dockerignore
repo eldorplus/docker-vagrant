@@ -1,0 +1,5 @@
+.git
+.cache
+*.tar
+*.md
+!README*.md
