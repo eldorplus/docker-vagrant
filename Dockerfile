@@ -11,6 +11,7 @@ COPY opennebula.repo /etc/yum.repos.d/opennebula.repo
 RUN yum -y install epel-release \
     && yum -y update \
     && yum -y install shadow-utils openssh-server openssh-clients libselinux-python sudo wget \
+    && yum -y install wget make gcc rsync wget git python-netaddr python-passlib \
     && yum -y install opennebula-server opennebula-sunstone opennebula-ruby opennebula-gate opennebula-flow \
     && sed -i -e 's/^\(tsflags=nodocs\)/#\1/' /etc/yum.conf
 
@@ -32,12 +33,18 @@ RUN date > /etc/vagrant_box_build_time && \
     chmod 0600 /home/vagrant/.ssh/authorized_keys && \
     chown -R vagrant /home/vagrant
 
-RUN yum install -y https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_x86_64.rpm \
-    && vagrant plugin install vagrant-aws vagrant-digitalocean expunge opennebula-provider \
-    && vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box \
-    && vagrant box add dummy https://github.com/eucher/opennebula-provider/raw/master/boxes/dummy/dummy.box \
-	&&  yum clean all \
+RUN wget http://cbs.centos.org/kojifiles/packages/ansible/2.9.2/2.el7/noarch/ansible-2.9.2-1.el7.noarch.rpm \
+    && yum -y localinstall ansible-2.9.2-1.el7.noarch.rpm && rm -f ansible-2.9.2-1.el7.noarch.rpm \
+    && wget https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_x86_64.rpm \
+    && yum -y localinstall vagrant_${VAGRANT_VERSION}_x86_64.rpm && rm -f vagrant_${VAGRANT_VERSION}_x86_64.rpm \
+    && vagrant plugin install vagrant-aws vagrant-digitalocean expunge vagrant-gatling-rsync vagrant-rsync-back \
+    && vagrant plugin install opennebula-provider --plugin-version 1.1.2 \
+    &&  yum clean all \
     &&  rm -rf /var/cache/yum
+
+#RUN yum install -y https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_x86_64.rpm \
+RUN  vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box \
+    && vagrant box add dummy https://github.com/eucher/opennebula-provider/raw/master/boxes/dummy/dummy.box
 
 RUN sed -i -e 's/Defaults.*requiretty/#&/' /etc/sudoers && \
     sed -i -e 's/\(UsePAM \)yes/\1 no/' /etc/ssh/sshd_config
