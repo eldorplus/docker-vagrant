@@ -33,11 +33,11 @@ RUN date > /etc/vagrant_box_build_time && \
     chmod 0600 /home/vagrant/.ssh/authorized_keys && \
     chown -R vagrant /home/vagrant
 
-RUN wget http://cbs.centos.org/kojifiles/packages/ansible/2.9.2/2.el7/noarch/ansible-2.9.2-1.el7.noarch.rpm \
-    && yum -y localinstall ansible-2.9.2-1.el7.noarch.rpm && rm -f ansible-2.9.2-1.el7.noarch.rpm \
+RUN wget http://cbs.centos.org/kojifiles/packages/ansible/2.9.2/2.el7/noarch/ansible-2.9.2-2.el7.noarch.rpm \
+    && yum -y localinstall ansible-2.9.2-2.el7.noarch.rpm && rm -f ansible-2.9.2-2.el7.noarch.rpm \
     && wget https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_x86_64.rpm \
     && yum -y localinstall vagrant_${VAGRANT_VERSION}_x86_64.rpm && rm -f vagrant_${VAGRANT_VERSION}_x86_64.rpm \
-    && vagrant plugin install vagrant-aws vagrant-digitalocean expunge vagrant-gatling-rsync vagrant-rsync-back \
+    && vagrant plugin install vagrant-aws vagrant-digitalocean vagrant-gatling-rsync vagrant-rsync-back \
     && vagrant plugin install opennebula-provider --plugin-version 1.1.2 \
     &&  yum clean all \
     &&  rm -rf /var/cache/yum
