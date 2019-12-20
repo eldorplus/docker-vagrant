@@ -38,7 +38,7 @@ RUN wget http://cbs.centos.org/kojifiles/packages/ansible/2.9.2/2.el7/noarch/ans
     && wget https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_x86_64.rpm \
     && yum -y localinstall vagrant_${VAGRANT_VERSION}_x86_64.rpm && rm -f vagrant_${VAGRANT_VERSION}_x86_64.rpm \
     && vagrant plugin install vagrant-aws vagrant-digitalocean vagrant-gatling-rsync vagrant-rsync-back \
-    && vagrant plugin install opennebula-provider --plugin-version 1.1.2 \
+    && vagrant plugin install opennebula-provider \
     &&  yum clean all \
     &&  rm -rf /var/cache/yum
 
